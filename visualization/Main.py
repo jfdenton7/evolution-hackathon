@@ -10,12 +10,15 @@ master.title(title)
 master.columnconfigure(0, weight=1)
 master.rowconfigure(0, weight=1)
 
+def hey():
+    print("hi")
+
 if filename:
     with open(filename, 'r') as f:
         datastore = json.load(f)
 
-petri = GeneratePetriDish(master, datastore)
-# petri.populateScrollList()
+petri = GeneratePetriDish(master, datastore, hey)
+petri.populateScrollList()
 
 # label = ttk.Label(frame, textvariable=v).grid(column=2, row=2, sticky=(W, E))
 # ttk.Button(frame, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
