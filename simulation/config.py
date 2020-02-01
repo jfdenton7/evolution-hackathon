@@ -131,9 +131,20 @@ BASE_FOOD_DISTR = {
     AMYLOSE: 10
 }
 
+# ======== GENE MAP  ======== #
 
 
-
+GENE_HIST = 'h'
+GENE_GLUC = 'g'
+GENE_PENT = 'p'
+GENE_FRUC = 'f'
+GENE_AMYL = 'a'
+GENE_G1_S = '<'
+GENE_G2_M = '>'
+GENE_CELL = 'c'
+GENE_DNA = 'd'
+GENE_EXCR = 'e'
+GENE_Q = 'q'
 
 
 

@@ -28,11 +28,12 @@ class Dish:
         colonies = []
 
         for i in range(self.num_cols):
-            colony = Colony(start_sz, i)
 
+            # determine colony position
             x = randrange(len(self.dish))
             y = randrange(len(self.dish[x]))
 
+            colony = Colony(start_sz, i)
             # set position to have a colony
             self.dish[x][y] = colony
 

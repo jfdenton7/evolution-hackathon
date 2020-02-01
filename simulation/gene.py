@@ -21,8 +21,6 @@ class GeneManager:
     longest 'correct' set of an
     expression, determines
     remainder as in-active genetic code
-
-
     """
 
     def __init__(self):

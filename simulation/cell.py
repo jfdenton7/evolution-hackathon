@@ -1,7 +1,8 @@
 from simulation.config import *
 from simulation.gene import GeneManager
 from simulation.unit_manager import UnitManager
-from random import choice
+from random import choice, randrange
+from math import floor
 
 # number of genes directly corresponds to the number
 # of terminals in a gene.
@@ -15,10 +16,10 @@ from random import choice
 
 class Cell:
 
-    def __init__(self, gm: GeneManager, um: UnitManager, colony, options=DEFAULT_START, carc_lvl=0):
+    def __init__(self, gm: GeneManager, um: UnitManager, pos, options=DEFAULT_START, carc_lvl=0):
         self.unit_manager = um
         self.gene_manager = gm
-        self.colony = colony
+        self.pos = pos
 
         # carc lvl determines added weighted
         self.carc_lvl = carc_lvl
@@ -63,44 +64,50 @@ class Cell:
     def __generate_genome(self):
         # form of genome follows:
         # (genetic_code:str, performance:float, working:bool)
-        self.genome = [
-            self.unit_manager.build_genome(*HIST_GENE, self.gene_manager),
+        self.genome = {
+           GENE_HIST: self.unit_manager.build_genome(*HIST_GENE, self.gene_manager, self),
 
             # sugars
-            self.unit_manager.build_genome(*GLUC, self.gene_manager),
-            self.unit_manager.build_genome(*PENT, self.gene_manager),
-            self.unit_manager.build_genome(*FRUC, self.gene_manager),
-            self.unit_manager.build_genome(*AMLY, self.gene_manager),
+            GENE_GLUC: self.unit_manager.build_genome(*GLUC, self.gene_manager, self),
+            GENE_PENT: self.unit_manager.build_genome(*PENT, self.gene_manager, self),
+            GENE_FRUC: self.unit_manager.build_genome(*FRUC, self.gene_manager, self),
+            GENE_AMYL: self.unit_manager.build_genome(*AMLY, self.gene_manager, self),
 
             # checkpoints
-            self.unit_manager.build_genome(*G1_S, self.gene_manager),
-            self.unit_manager.build_genome(*G2_M, self.gene_manager),
+            GENE_G1_S: self.unit_manager.build_genome(*G1_S, self.gene_manager, self),
+            GENE_G2_M: self.unit_manager.build_genome(*G2_M, self.gene_manager, self),
 
             # cell cycles
-            self.unit_manager.build_genome(*CELL_CYCLE, self.gene_manager),
+            GENE_CELL: self.unit_manager.build_genome(*CELL_CYCLE, self.gene_manager, self),
 
             # DNA replication
-            self.unit_manager.build_genome(*DNA_REP, self.gene_manager),
+            GENE_DNA: self.unit_manager.build_genome(*DNA_REP, self.gene_manager, self),
 
             # excrete
-            self.unit_manager.build_genome(*EXCRETE, self.gene_manager),
+            GENE_EXCR: self.unit_manager.build_genome(*EXCRETE, self.gene_manager, self),
 
             # q-sensing
-            self.unit_manager.build_genome(*Q_SENSES, self.gene_manager)]
+            GENE_Q: self.unit_manager.build_genome(*Q_SENSES, self.gene_manager, self)}
 
     def __mutate(self):
-        self.unit_manager.mutate_genome(self.gene_manager, choice(self.genome))
+        self.unit_manager.mutate_genome(self.gene_manager, choice(list(self.genome.values())))
 
     def cycle(self, dish):
-        self.__eat(dish)
-        self.__mutate()
+        # only perform is alive
+        if self.is_alive:
+            self.__eat(dish)
+            self.__mutate()
 
-        # perform this phase's action
-        self.__phase()
+            # perform this phase's action
+            self.__phase()
 
-        self.__age()
+            self.__age()
 
-        return self.is_alive, self.is_splitting
+        if self.is_splitting:
+            modif = self.unit_manager.effective_modifier(self.genome[GENE_Q])
+            return self.is_alive, self.is_splitting, floor(modif)
+
+        return self.is_alive, self.is_splitting, 0
 
     def __eat(self, dish):
         """
@@ -110,13 +117,36 @@ class Cell:
         """
         self.__find_food(dish)
 
+        # consume living energy
         self.atp -= self.hunger
         if self.atp < 0:
             # could not afford to eat
-            self.__die()
+            self.die()
 
     def __find_food(self, dish):
-        pass
+        # find position of cell
+        x, y = self.pos()
+
+        # check if food available in pos
+        food = dish[x][y].next()
+        if food:
+            self.__consume(food)
+
+    def __consume(self, food):
+
+        _type = food.next()
+        if _type is GLUCOSE:
+            mod = self.unit_manager.effective_modifier(self.genome[GENE_GLUC])
+            self.atp += BASE_FOOD_PROD[GLUCOSE] + BASE_FOOD_PROD[GLUCOSE] * mod
+        elif food is FRUCTOSE:
+            mod = self.unit_manager.effective_modifier(self.genome[GENE_FRUC])
+            self.atp += BASE_FOOD_PROD[FRUCTOSE] +  BASE_FOOD_PROD[FRUCTOSE] * mod
+        elif food is PENTOSE:
+            mod = self.unit_manager.effective_modifier(self.genome[GENE_PENT])
+            self.atp += BASE_FOOD_PROD[PENTOSE] + BASE_FOOD_PROD[PENTOSE] * mod
+        elif food is AMYLOSE:
+            mod = self.unit_manager.effective_modifier(self.genome[GENE_AMYL])
+            self.atp += BASE_FOOD_PROD[AMYLOSE] + BASE_FOOD_PROD[AMYLOSE] * mod
 
     def __phase(self):
         """
@@ -129,7 +159,6 @@ class Cell:
 
         :return: none
         """
-        # cell demands energy to keep functions
 
         # phase 1 is growth phase
         if self.phase is Phase.G1:
@@ -155,14 +184,19 @@ class Cell:
                 self.hunger += COSTS[HUNGER_GROWTH]
         # phase 4 is to split, M-phase, inform colony!!!
         else:
-            self.is_splitting = True
+            modif = self.unit_manager.effective_modifier(self.genome[GENE_DNA])
+            attempt = randrange(modif)
+            # only split if capable
+            if attempt > BROKEN_GENE:
+                self.is_splitting = True
+
             self.phase = Phase.G1
             # restarting...
 
         if self.atp < 0:
-            self.__die()
+            self.die()
 
-    def __die(self):
+    def die(self):
         """
         cell dies
 
@@ -173,7 +207,7 @@ class Cell:
     def __age(self):
         self.age += 1
         if self.age > DEFAULT_START[MAX_AGE]:
-            self.__die()
+            self.die()
 
 
 if __name__ == '__main__':

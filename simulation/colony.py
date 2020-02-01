@@ -5,7 +5,7 @@ from simulation.unit_manager import UnitManager
 
 class Colony:
 
-    def __init__(self, init_sz, id, gm: GeneManager, um: UnitManager, model=None, carc_lvl=0):
+    def __init__(self, init_sz, id, gm: GeneManager, um: UnitManager, dish, pos, model=None, carc_lvl=0):
         """
         build a colony of init_sz,
         if model is not specified
@@ -16,11 +16,22 @@ class Colony:
         self.cells = []
         self.id = id
 
+        self.pos = pos
+        self.dish = dish
+
         self.gm = gm
         self.um = um
         self.carc = carc_lvl
 
+        # current radius of population,
+        # increases when cell spreads to other position
+        # in dish
+        self.radius = 0
+
         self.__init_colony(init_sz, self.gm, self.um, self.carc)
+
+    def col_pos(self):
+        return self.pos
 
     def cycle_cells(self):
         """
@@ -31,7 +42,7 @@ class Colony:
         """
 
         for cell in self.cells:
-            life, split = cell.cycle()
+            life, split, modif = cell.cycle()
             if not life:
                 self.cells.remove(cell)
             elif split:

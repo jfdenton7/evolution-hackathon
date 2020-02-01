@@ -30,3 +30,5 @@ class Food:
         elif self.food_amt[AMYLOSE] > 0:
             self.food_amt[AMYLOSE] -= 1
             return AMYLOSE
+        else:
+            return None
