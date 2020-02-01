@@ -7,8 +7,6 @@ class GeneratePetriDish:
         self.generate = generate
         self.frame = ttk.Frame(root, padding="5 5 5 5")
         self.frame.grid(column=0, row=0, sticky=(N, W, E, S))
-        self.frame.grid_rowconfigure(0, weight=1)
-        self.frame.grid_columnconfigure(0, weight=1)
         self.left = Canvas(self.frame, width=300, height=400, borderwidth=0, bg="dark gray")
         self.left.grid(column=0, row=0, sticky=(N, W, E, S))
         self.center = Canvas(self.frame, width=400, height=400, borderwidth=0, bg="gray")
@@ -16,15 +14,19 @@ class GeneratePetriDish:
         self.right = Canvas(self.frame, width=300, height=400, borderwidth=0, bg="dark gray")
         self.right.grid(column=2, row=0, sticky=(N, W, E, S))
 
-        self.bottom = Canvas(self.frame, width=1000, height=100, borderwidth=0, bg="dark gray")
-        self.bottom.config(scrollregion=(self.bottom.bbox("all")))
-        self.bottom.grid(columnspan=3, row=1, sticky=(N, W, E, S))
+        self.scrollFrame = ttk.Frame(self.frame).grid(columnspan=3, row=1, sticky=(N, W, E, S))
 
-        scroll = ttk.Scrollbar(self.frame, orient=HORIZONTAL, command=self.bottom.xview)
-        scroll.grid(columnspan=3, row=2, sticky=(W, E))
-        self.bottom.config(xscrollcommand=scroll.set)
+        scroll = Scrollbar(self.scrollFrame, orient=HORIZONTAL)
+        # scroll.pack(fill=X, side=BOTTOM, expand=FALSE)
+        self.bottom = Canvas(self.scrollFrame, bd=0, highlightthickness=0,
+                        xscrollcommand=scroll.set)
+        # self.bottom.pack(side=TOP, fill=BOTH, expand=TRUE)
+        scroll.config(command=self.bottom.xview)
 
-        self.interior = ttk.Frame(canvas)
+        self.bottom.xview_moveto(0)
+        self.bottom.yview_moveto(0)
+
+        self.interior = Frame(self.bottom)
         
 
 
