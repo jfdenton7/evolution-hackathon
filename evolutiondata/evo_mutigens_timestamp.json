@@ -2,16 +2,16 @@
   "name" : "evo_mutigens_timestamp",
   "colonies" : [
     {
-      "colony_1" : {
-        "x": 50,
-        "y": 50,
-        "radius": 2
-      },
-      "colony_2" : {
-        "x" : 75,
-        "y" : 50,
-        "radius" : 20
-      }
+      "name" : "colony_1",
+      "x": 50,
+      "y": 50,
+      "radius" : 2
+    },
+    {
+      "name" : "colony_2",
+      "x" : 75,
+      "y" : 50,
+      "radius" : 20
     }
   ]
 }

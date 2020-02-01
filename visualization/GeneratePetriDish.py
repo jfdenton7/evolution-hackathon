@@ -14,17 +14,19 @@ class GeneratePetriDish:
         self.right = Canvas(self.frame, width=300, height=400, borderwidth=0, bg="dark gray")
         self.right.grid(column=2, row=0, sticky=(N, W, E, S))
         self.bottom = Canvas(self.frame, width=1000, height=100, borderwidth=0, bg="dark gray")
+        self.bottom.config(scrollregion=self.bottom.bbox("all"))
         self.bottom.grid(columnspan=3, row=1, sticky=(N, W, E, S))
+        scroll = ttk.Scrollbar(self.frame, orient=HORIZONTAL, command=self.bottom.xview)
+        scroll.grid(columnspan=3, row=2, sticky=(W, E))
+        self.bottom.config(xscrollcommand=scroll.set)
         self.center.create_oval(11, 11, 391, 391, outline="white", width=3)
         self.jsondata = jsondata
 
     def populateScrollList(self):
-        listbox = Listbox(self.bottom, height=5)
-        listbox.grid(column=0, row=0, sticky=(N, W, E, S))
-        scroll = ttk.Scrollbar(self.bottom, orient=VERTICAL, command=listbox.xview)
-        scroll.grid(column=1, row=0, sticky=(W, E))
-        listbox['xscrollcommand'] = scroll.set
-        self.bottom.grid_columnconfigure(0, weight=1)
-        self.bottom.grid_rowconfigure(0, weight=1)
-        for colony in self.jsondata.colonies:
-            listbox.insert('end', colony.name)
+        i = 0
+        for colony in self.jsondata["colonies"]:
+            c = Cavnas(self.bottom, height=90, width=90, borderwidth=0, bg"light black")
+            c.create_oval(2, 2, 36, 36, outline="white", width=2)
+            ttk.Label(c, text=colony["name"], column=i, row=1, sticky=S)
+            c.grid((column=i, row=0, sticky=(N, W, E, S)))
+            i++

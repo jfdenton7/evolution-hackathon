@@ -4,16 +4,18 @@ from GeneratePetriDish import GeneratePetriDish
 import json
 
 title = "Trial x"
-
+filename = "..\evolutiondata\evo_mutigens_timestamp.json"
 master = Tk()
 master.title(title)
 master.columnconfigure(0, weight=1)
 master.rowconfigure(0, weight=1)
 
-filename = rs.OpenFileName("Open JSON File", filter)
+if filename:
+    with open(filename, 'r') as f:
+        datastore = json.load(f)
 
-petri = GeneratePetriDish(master, master)
-
+petri = GeneratePetriDish(master, datastore)
+# petri.populateScrollList()
 
 # label = ttk.Label(frame, textvariable=v).grid(column=2, row=2, sticky=(W, E))
 # ttk.Button(frame, text="Calculate", command=calculate).grid(column=3, row=3, sticky=W)
