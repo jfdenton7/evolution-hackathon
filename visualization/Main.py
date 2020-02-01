@@ -1,23 +1,29 @@
 from tkinter import *
 from tkinter import ttk
-from GeneratePetriDish import GeneratePetriDish
+from visualization import GeneratePetriDish
+from simulation import colony
 import json
 
-title = "Trial x"
-filename = "..\evolutiondata\evo_mutigens_timestamp.json"
+title = "Bacterial Evolution"
+water = "..\\simulation\\dataWATER.json"
+ferr = "..\\simulation\\dataWATER.json"
+aa = "..\\simulation\\dataWATER.json"
+files = [water, ferr, aa]
+jsondata = []
 master = Tk()
 master.title(title)
 master.columnconfigure(0, weight=1)
 master.rowconfigure(0, weight=1)
 
-def hey():
-    print("hi")
+i = 0
+for file in files:
+    if file:
+        with open(file, 'r') as f:
+            jsondata[i] = json.load(f)
+    i += 1
 
-if filename:
-    with open(filename, 'r') as f:
-        datastore = json.load(f)
-
-petri = GeneratePetriDish(master, datastore, hey)
+dish = colony.Dish()
+petri = GeneratePetriDish(master, Dish().start_simul)
 petri.populateScrollList()
 
 # label = ttk.Label(frame, textvariable=v).grid(column=2, row=2, sticky=(W, E))

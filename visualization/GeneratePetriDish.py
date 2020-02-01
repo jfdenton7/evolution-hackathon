@@ -3,7 +3,7 @@ from tkinter import ttk
 
 
 class GeneratePetriDish:
-    def __init__(self, root, jsondata, generate):
+    def __init__(self, root, generate):
         self.generate = generate
         self.frame = ttk.Frame(root, padding="5 5 5 5")
         self.frame.grid(column=0, row=0, sticky=(N, W, E, S))
@@ -30,12 +30,10 @@ class GeneratePetriDish:
         # scroll.config(command=self.bottom.xview)
         self.interior = Frame(self.bottom)
 
-        self.jsondata = jsondata
         self.settings = self.settings()
 
     def populatePetridish(self, index):
         self.center.create_oval(11, 11, 391, 391, outline="white", width=3)
-
 
     def xyClick(self, event):
         if 600 < event.y_root:
@@ -61,10 +59,10 @@ class GeneratePetriDish:
             if 180 < event.x_root < 375:
                 self.generate(15, int(self.settings["e"].get()) if type(int(self.settings["e"].get())) == int else 8,
                               self.settings["m"])
-    
-    def populateScrollList(self):
+
+    def populateScrollList(self, jsondata):
         i = 0
-        for colony in self.jsondata["colonies"]:
+        for colony in jsondata["colonies"]:
             c = Canvas(self.bottom, height=90, width=90, borderwidth=0, bg="black")
             c.bind("<Button-1>", self.xyClick)
             c.create_oval(10, 10, 80, 80, outline="white", width=2)
