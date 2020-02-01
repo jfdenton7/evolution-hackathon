@@ -1,3 +1,4 @@
+from copy import deepcopy
 from simulation.config import *
 from simulation.gene import GeneManager
 from simulation.unit_manager import UnitManager
@@ -16,10 +17,11 @@ from math import floor
 
 class Cell:
 
-    def __init__(self, gm: GeneManager, um: UnitManager, pos, options=DEFAULT_START, carc_lvl=0):
+    def __init__(self, gm: GeneManager, um: UnitManager, pos, options=DEFAULT_START, carc_lvl=1, col_id=0):
         self.unit_manager = um
         self.gene_manager = gm
         self.pos = pos
+        self.col_id = col_id
 
         # carc lvl determines added weighted
         self.carc_lvl = carc_lvl
@@ -58,14 +60,17 @@ class Cell:
         :return: str representing genetic code (expressions)
         """
         s = ""
-        s += "HISTIDINE: " + self.genome[GENE_HIST][1]
-        s += "GLUCOSE: " + self.genome[GENE_HIST][1]
-        s += "PENTOSE: " + self.genome[GENE_HIST][1]
-        s += "FRUCTOSE: " + self.genome[GENE_HIST][1]
-        s += "AMYLOSE: " + self.genome[GENE_HIST][1]
-        s += "HISTIDINE: " + self.genome[GENE_HIST][1]
-
-
+        s += "HISTIDINE: " + str(self.genome[GENE_HIST]) + "\n"
+        s += "GLUCOSE: " + str(self.genome[GENE_GLUC]) + "\n"
+        s += "PENTOSE: " + str(self.genome[GENE_PENT]) + "\n"
+        s += "FRUCTOSE: " + str(self.genome[GENE_FRUC]) + "\n"
+        s += "AMYLOSE: " + str(self.genome[GENE_AMYL]) + "\n"
+        s += "G1_S: " + str(self.genome[GENE_G1_S]) + "\n"
+        s += "G2_M: " + str(self.genome[GENE_G2_M]) + "\n"
+        s += "CELL_CYC: " + str(self.genome[GENE_CELL]) + "\n"
+        s += "DNA_REP: " + str(self.genome[GENE_DNA]) + "\n"
+        s += "EXCRETE: " + str(self.genome[GENE_EXCR]) + "\n"
+        s += "Q-FEELS: " + str(self.genome[GENE_Q]) + "\n"
 
         return s
 
@@ -98,7 +103,9 @@ class Cell:
             GENE_Q: self.unit_manager.build_genome(*Q_SENSES, self.gene_manager, self)}
 
     def __mutate(self):
-        self.unit_manager.mutate_genome(self.gene_manager, choice(list(self.genome.values())))
+        bar = random()
+        if random() * self.carc_lvl > bar:
+            self.unit_manager.mutate_genome(self.gene_manager, choice(list(self.genome.values())))
 
     def cycle(self, dish):
         # only perform is alive
@@ -113,9 +120,9 @@ class Cell:
 
         if self.is_splitting:
             modif = self.unit_manager.effective_modifier(self.genome[GENE_Q])
-            return self.is_alive, self.is_splitting, floor(modif)
+            return self.is_alive, self.is_splitting, floor(modif), deepcopy(self)
 
-        return self.is_alive, self.is_splitting, 0
+        return self.is_alive, self.is_splitting, 0, None
 
     def __eat(self, dish):
         """
@@ -133,10 +140,10 @@ class Cell:
 
     def __find_food(self, dish):
         # find position of cell
-        x, y = self.pos
+        row, col = self.pos
 
         # check if food available in pos
-        food = dish[x][y].next()
+        food = dish[row][col].next()
         if food:
             self.__consume(food)
 
@@ -218,6 +225,9 @@ class Cell:
 
     def get_pos(self):
         return self.pos
+
+    def set_pos(self, pos):
+        self.pos = pos
 
 
 if __name__ == '__main__':

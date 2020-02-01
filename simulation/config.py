@@ -4,6 +4,12 @@ from math import sqrt
 # all genes encoded follow func:terminal:func:terminal....
 
 
+# Carcinogens
+CARC_WATER = 1
+CARC_PHER = 2
+CARC_AA = 3
+
+
 class Phase(Enum):
     G1 = 0,
     G2 = 1,
@@ -15,6 +21,11 @@ ADD = 'b'
 MINUS = 'c'
 OP_SET = '[abc]'
 EMPTY = '_'
+
+
+DEFAULT_START_SZ = 1
+MAX_COLONY_SZ = 30000
+
 
 TERMINALS = []
 FUNCTIONS = {MULT: lambda a, b: a * b,
@@ -126,10 +137,10 @@ BASE_FOOD_PROD = {
 
 }
 BASE_FOOD_DISTR = {
-    GLUCOSE: 10,
-    PENTOSE: 10,
-    FRUCTOSE: 10,
-    AMYLOSE: 10
+    GLUCOSE: 1000,
+    PENTOSE: 1000,
+    FRUCTOSE: 1000,
+    AMYLOSE: 1000
 }
 
 # ======== GENE MAP  ======== #
