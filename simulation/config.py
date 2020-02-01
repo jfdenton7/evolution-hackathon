@@ -68,7 +68,7 @@ Q_SENSES = 9, False
 
 # ======== DISH - INFO ========
 CYCLE_TIME = 1
-DISH_RADI = 250
+DISH_RADI = 400
 CIRC_SIDE = 30
 DELTA = 5
 
@@ -146,17 +146,17 @@ BASE_FOOD_DISTR = {
 # ======== GENE MAP  ======== #
 
 
-GENE_HIST = 'h'
-GENE_GLUC = 'g'
-GENE_PENT = 'p'
-GENE_FRUC = 'f'
-GENE_AMYL = 'a'
-GENE_G1_S = '<'
-GENE_G2_M = '>'
-GENE_CELL = 'c'
-GENE_DNA = 'd'
-GENE_EXCR = 'e'
-GENE_Q = 'q'
+GENE_HIST = 'histine'
+GENE_GLUC = 'glucose'
+GENE_PENT = 'pentose'
+GENE_FRUC = 'fructose'
+GENE_AMYL = 'amylose'
+GENE_G1_S = 'G1/S'
+GENE_G2_M = 'G2/M'
+GENE_CELL = 'cell cycle'
+GENE_DNA = 'DNA-replicators'
+GENE_EXCR = 'excretors'
+GENE_Q = 'Quorum sensing'
 
 
 

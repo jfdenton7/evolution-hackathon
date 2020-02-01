@@ -102,6 +102,15 @@ class Cell:
             # q-sensing
             GENE_Q: self.unit_manager.build_genome(*Q_SENSES, self.gene_manager, self)}
 
+    def get_perf(self):
+        pairs = ""
+        for gene_name in self.genome.keys():
+            gene = self.genome[gene_name]
+            modif = self.unit_manager.effective_modifier(gene)
+            pairs += gene_name + ":str: " + str(modif)
+        return pairs
+
+
     def __mutate(self):
         bar = random()
         if random() * self.carc_lvl > bar:

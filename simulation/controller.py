@@ -2,6 +2,7 @@ from simulation.config import CARC_WATER, CARC_FERR, CARC_AA
 import os
 import re
 import json
+from os import path
 from copy import deepcopy
 import datetime
 
@@ -33,7 +34,7 @@ class Controller:
         Pack a json with trial data according to the following format::
 
         {
-        'name': str
+        'name': st
         'trials': [
 
         {
@@ -66,8 +67,11 @@ class Controller:
         }
 
     def __send_json(self):
+        if path.exists(f'data{self.mutigen}.json'):
+            os.remove(f'data{self.mutigen}.json')
 
-        with open(f'data{self.mutigen}.json', 'w', encoding='utf-8') as f:
+        with open(f'data{self.mutigen}.json', 'w+', encoding='utf-8') as f:
+            print(f)
             json.dump(self.json, f, ensure_ascii=False, indent=4)
 
     def __reset(self):

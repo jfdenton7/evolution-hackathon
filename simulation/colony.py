@@ -66,6 +66,9 @@ class Dish:
         :param model:
         :return:
         """
+        self.dish = []
+        self.__build_dish()
+
         colonies = []
         if not self.controller:
             self.controller = Controller(carc)
@@ -101,17 +104,19 @@ class Dish:
                     self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
                     # start next sim
                     self.start_simul(num_colonies, test_sz - 1, carc, model=model)
+                    return
                 elif len(colonies) == 1:
                     if test_sz > 0:
                         # send trial data
                         self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
                         # start next sim
                         self.start_simul(num_colonies, test_sz - 1, carc, model=None)
+                        return
                     else:
                         # end sim
                         self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), True)
                         print('exiting simulation...')
-                        exit(0)
+                        return
 
             print('colonies remain: ' + str(len(colonies)))
 
@@ -221,4 +226,4 @@ class Colony:
 
 
 if __name__ == '__main__':
-    Dish().start_simul(15, 1, CARC_WATER)
+    Dish().start_simul(15, 8, CARC_FERR)

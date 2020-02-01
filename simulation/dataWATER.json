@@ -1,117 +1,103 @@
 {
-    "name": "evo_WATER_10:51:24",
+    "name": "evo_WATER_13:48:47",
     "trials": [
         {
             "trial_id": 1,
-            "max_col_id": 0,
-            "max_sz": 3675,
+            "max_col_id": 7,
+            "max_sz": 3098,
             "max_rad": 3,
             "colonies": [
                 {
                     "colony_id": 0,
-                    "x": 142,
-                    "y": 39,
-                    "pop": 3675,
-                    "radius": 3
+                    "x": 108,
+                    "y": 42,
+                    "pop": 33,
+                    "radius": 1
                 },
                 {
                     "colony_id": 1,
-                    "x": 236,
-                    "y": 28,
-                    "pop": 77,
+                    "x": 279,
+                    "y": 29,
+                    "pop": 697,
                     "radius": 1
                 },
                 {
                     "colony_id": 2,
-                    "x": 7,
-                    "y": 47,
-                    "pop": 315,
-                    "radius": 1
+                    "x": 337,
+                    "y": 34,
+                    "pop": 811,
+                    "radius": 4
                 },
                 {
-                    "colony_id": 5,
-                    "x": 10,
-                    "y": 2,
-                    "pop": 1,
+                    "colony_id": 4,
+                    "x": 280,
+                    "y": 8,
+                    "pop": 562,
                     "radius": 1
                 },
                 {
                     "colony_id": 6,
-                    "x": 108,
-                    "y": 37,
+                    "x": 66,
+                    "y": 28,
                     "pop": 1,
                     "radius": 1
                 },
                 {
                     "colony_id": 7,
-                    "x": 212,
-                    "y": 24,
-                    "pop": 1,
-                    "radius": 1
-                },
-                {
-                    "colony_id": 8,
-                    "x": 104,
-                    "y": 58,
-                    "pop": 1,
-                    "radius": 1
+                    "x": 38,
+                    "y": 44,
+                    "pop": 3098,
+                    "radius": 3
                 },
                 {
                     "colony_id": 9,
-                    "x": 60,
-                    "y": 57,
-                    "pop": 1,
+                    "x": 102,
+                    "y": 53,
+                    "pop": 9,
                     "radius": 1
                 },
                 {
                     "colony_id": 10,
-                    "x": 55,
-                    "y": 0,
-                    "pop": 3,
-                    "radius": 1
-                },
-                {
-                    "colony_id": 11,
-                    "x": 91,
-                    "y": 11,
+                    "x": 57,
+                    "y": 35,
                     "pop": 1,
                     "radius": 1
                 },
                 {
-                    "colony_id": 12,
-                    "x": 129,
-                    "y": 34,
-                    "pop": 121,
+                    "colony_id": 11,
+                    "x": 275,
+                    "y": 49,
+                    "pop": 1,
                     "radius": 1
                 },
                 {
                     "colony_id": 13,
-                    "x": 4,
-                    "y": 40,
-                    "pop": 68,
-                    "radius": 3
+                    "x": 270,
+                    "y": 43,
+                    "pop": 20,
+                    "radius": 1
                 },
                 {
                     "colony_id": 14,
-                    "x": 27,
-                    "y": 7,
-                    "pop": 141,
-                    "radius": 2
+                    "x": 305,
+                    "y": 24,
+                    "pop": 1,
+                    "radius": 1
                 }
             ]
         },
         {
             "trial_id": 2,
-            "max_col_id": 0,
+            "max_col_id": 13,
             "max_sz": 0,
-            "max_rad": 1,
+            "max_rad": 78,
             "colonies": [
                 {
-                    "colony_id": 7,
-                    "x": 113,
-                    "y": 49,
+                    "colony_id": 12,
+                    "x": 130,
+                    "y": 53,
                     "pop": 1,
-                    "radius": 1
+                    "radius": 94
                 }
             ]
         }
