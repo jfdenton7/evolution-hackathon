@@ -15,12 +15,13 @@ from random import choice
 
 class Cell:
 
-    def __init__(self, gm: GeneManager, um: UnitManager, options=DEFAULT_START, carc_lvl=0):
+    def __init__(self, gm: GeneManager, um: UnitManager, colony, options=DEFAULT_START, carc_lvl=0):
         self.unit_manager = um
         self.gene_manager = gm
+        self.colony = colony
 
-        # carc lvl determines
-        self.carc_lvl =carc_lvl
+        # carc lvl determines added weighted
+        self.carc_lvl = carc_lvl
 
         self.genome = None
         self.__generate_genome()
@@ -32,6 +33,8 @@ class Cell:
         self.hunger = DEFAULT_START[HUNGER]
 
         self.is_splitting = False
+        self.is_alive = True
+        self.age = 0
 
     def __str__(self):
         """
@@ -88,8 +91,8 @@ class Cell:
     def __mutate(self):
         self.unit_manager.mutate_genome(self.gene_manager, choice(self.genome))
 
-    def cycle(self):
-        self.__eat()
+    def cycle(self, dish):
+        self.__eat(dish)
         self.__mutate()
 
         # perform this phase's action
@@ -97,12 +100,22 @@ class Cell:
 
         self.__age()
 
-    def __eat(self):
+        return self.is_alive, self.is_splitting
+
+    def __eat(self, dish):
         """
         attempt to find food in current block
 
         :return:
         """
+        self.__find_food(dish)
+
+        self.atp -= self.hunger
+        if self.atp < 0:
+            # could not afford to eat
+            self.__die()
+
+    def __find_food(self, dish):
         pass
 
     def __phase(self):
@@ -117,13 +130,16 @@ class Cell:
         :return: none
         """
         # cell demands energy to keep functions
-        self.atp -= self.hunger
 
         # phase 1 is growth phase
         if self.phase is Phase.G1:
             if self.atp > COSTS[GROWTH]:
                 self.atp -= COSTS[GROWTH]
                 self.phase = Phase.S
+                # double in size
+                self.size += self.size
+                # increase hunger
+                self.hunger += COSTS[HUNGER_GROWTH]
         # phase 2 is DNA replication
         elif self.phase is Phase.S:
             if self.atp > COSTS[DNA]:
@@ -134,28 +150,30 @@ class Cell:
             if self.atp > COSTS[GROWTH]:
                 self.atp -= COSTS[GROWTH]
                 self.phase = Phase.M
+                # grow in size and hunger
+                self.size += self.size
+                self.hunger += COSTS[HUNGER_GROWTH]
         # phase 4 is to split, M-phase, inform colony!!!
         else:
             self.is_splitting = True
             self.phase = Phase.G1
             # restarting...
 
-    def __split(self):
+        if self.atp < 0:
+            self.__die()
+
+    def __die(self):
         """
-        attempt to split the cell
-        must have:
-        - available ATP
-        - enough saved hisidine
-        - q-sensing says space is available
+        cell dies
 
         :return:
         """
-        pass
+        self.is_alive = False
 
     def __age(self):
-        pass
-
-
+        self.age += 1
+        if self.age > DEFAULT_START[MAX_AGE]:
+            self.__die()
 
 
 if __name__ == '__main__':

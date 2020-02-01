@@ -30,7 +30,7 @@ class UnitManager:
     def mutate_genome(self, gene_manager: GeneManager, genome: list):
         index = randrange(len(genome))
 
-        code, perf = genome[index]
+        code, perf, _ = genome[index]
 
         # mutate and re-calculate
         # form: gene, perf on return

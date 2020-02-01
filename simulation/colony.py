@@ -1,14 +1,26 @@
+from simulation.cell import Cell
+from simulation.gene import GeneManager
+from simulation.unit_manager import UnitManager
+
+
 class Colony:
 
-    def __init__(self, init_sz, model=None):
+    def __init__(self, init_sz, id, gm: GeneManager, um: UnitManager, model=None, carc_lvl=0):
         """
         build a colony of init_sz,
         if model is not specified
 
-        :param init_sz:
+        :param init_sz: number of sizes starting off in the colony
         :param model: if random is not wanted, have a cell model...
         """
         self.cells = []
+        self.id = id
+
+        self.gm = gm
+        self.um = um
+        self.carc = carc_lvl
+
+        self.__init_colony(init_sz, self.gm, self.um, self.carc)
 
     def cycle_cells(self):
         """
@@ -17,4 +29,23 @@ class Colony:
         on resulting cycle calls
         :return:
         """
-        pass
+
+        for cell in self.cells:
+            life, split = cell.cycle()
+            if not life:
+                self.cells.remove(cell)
+            elif split:
+                self.cells.append(Cell(self.gm, self.um, self.carc))
+
+    def __init_colony(self, sz, gm, um, carc):
+        for i in range(sz):
+            self.cells.append(Cell(gm, um, carc))
+
+
+if __name__ == '__main__':
+    gm = GeneManager()
+    um = UnitManager()
+
+    col = Colony(1, 0, gm, um)
+
+    col.cycle_cells()
