@@ -6,7 +6,7 @@ from math import sqrt
 
 # Carcinogens
 CARC_WATER = 1
-CARC_PHER = 2
+CARC_FERR = 2
 CARC_AA = 3
 
 
@@ -24,7 +24,7 @@ EMPTY = '_'
 
 
 DEFAULT_START_SZ = 1
-MAX_COLONY_SZ = 30000
+MAX_COLONY_SZ = 3000
 
 
 TERMINALS = []

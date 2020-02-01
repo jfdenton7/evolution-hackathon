@@ -4,7 +4,7 @@ from simulation.controller import Controller
 from simulation.gene import GeneManager
 from simulation.unit_manager import UnitManager
 from simulation.config import (CIRC_SIDE, DISH_RADI, DELTA, FRONT,
-                               DEFAULT_START_SZ, CARC_AA, CARC_PHER, CARC_WATER, MAX_COLONY_SZ)
+                               DEFAULT_START_SZ, CARC_AA, CARC_FERR, CARC_WATER, MAX_COLONY_SZ)
 from simulation.food import Food
 from random import randrange, choice
 
@@ -27,6 +27,8 @@ class Dish:
         """
         self.gm = GeneManager()
         self.um = UnitManager()
+
+        self.controller = None
 
         self.dish = []
         self.__build_dish()
@@ -65,7 +67,8 @@ class Dish:
         :return:
         """
         colonies = []
-        controller = Controller(carc, )
+        if not self.controller:
+            self.controller = Controller(carc)
 
         for i in range(num_colonies):
             # determine colony position
@@ -95,18 +98,18 @@ class Dish:
                 if max_col_sz >= MAX_COLONY_SZ:
                     model = max_col.fetch_model()
                     # send trial data
-                    controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
+                    self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
                     # start next sim
                     self.start_simul(num_colonies, test_sz - 1, carc, model=model)
                 elif len(colonies) == 1:
                     if test_sz > 0:
                         # send trial data
-                        controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
+                        self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), False)
                         # start next sim
                         self.start_simul(num_colonies, test_sz - 1, carc, model=None)
                     else:
                         # end sim
-                        controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), True)
+                        self.controller.send_data(colonies, max_col, max_col_sz, max_col.get_radius(), True)
                         print('exiting simulation...')
                         exit(0)
 
@@ -218,4 +221,4 @@ class Colony:
 
 
 if __name__ == '__main__':
-    Dish().start_simul(15, 50, CARC_WATER)
+    Dish().start_simul(15, 1, CARC_WATER)

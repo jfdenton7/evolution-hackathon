@@ -1,12 +1,24 @@
+from simulation.config import CARC_WATER, CARC_FERR, CARC_AA
+import os
+import re
+import json
 from copy import deepcopy
-from datetime import datetime
+import datetime
 
 
 class Controller:
 
-    def __init__(self, mutigen, time):
-        self.mutigen = mutigen
-        self.time = datetime().now().strftime('%H:%M:%S')
+    def __init__(self, mutigen):
+        if mutigen is CARC_WATER:
+            self.mutigen = 'WATER'
+        elif mutigen is CARC_FERR:
+            self.mutigen = 'FERR'
+        elif mutigen is CARC_AA:
+            self.mutigen = 'AA'
+        else:
+            self.mutigen = ''
+
+        self.time = datetime.datetime.now().strftime("%H:%M:%S")
         self.trials = []
 
     def send_data(self, colonies, max_col, max_col_sz, radius, final):
@@ -40,21 +52,23 @@ class Controller:
         }
         :return:
         """
-
+        print(self.trials)
         trials = list(map(
             self.__format_trials,
             self.trials
         ))
 
-        js = {
+        # print(trials)
+
+        self.json = {
             'name': f'evo_{self.mutigen}_{self.time}',
             'trials': trials
         }
 
-        pass
-
     def __send_json(self):
-        pass
+
+        with open(f'data{self.mutigen}.json', 'w', encoding='utf-8') as f:
+            json.dump(self.json, f, ensure_ascii=False, indent=4)
 
     def __reset(self):
         self.mutigen = None
@@ -81,7 +95,10 @@ class Controller:
         y, x = colony.pos
         return {
             'colony_id': colony.id,
-            'x':
+            'x': x,
+            'y': y,
+            'pop': colony.num_cells(),
+            'radius': colony.get_radius()
         }
 
 
