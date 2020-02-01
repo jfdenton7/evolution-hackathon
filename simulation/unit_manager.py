@@ -1,7 +1,7 @@
 from simulation.gene import GeneManager
 from random import choice, randrange
 from simulation.config import BROKEN_GENE
-from simulation.cell import Cell
+# from simulation.cell import Cell
 
 
 class UnitManager:
@@ -9,7 +9,7 @@ class UnitManager:
     def __init__(self):
         pass
 
-    def build_genome(self, num_genes, req: bool, gene_manager: GeneManager, cell: Cell) -> list:
+    def build_genome(self, num_genes, req: bool, gene_manager: GeneManager, cell) -> list:
         """
 
         :param num_genes:
@@ -34,11 +34,16 @@ class UnitManager:
     def mutate_genome(self, gene_manager: GeneManager, genome: list):
         index = randrange(len(genome))
 
-        code, perf, _ = genome[index]
+        code, _, _ = genome[index]
 
         # mutate and re-calculate
         # form: gene, perf on return
-        genome[index] = gene_manager.mutate(code)
+        code, perf = gene_manager.mutate(code)
+
+        if perf < BROKEN_GENE:
+            genome[index] = code, perf, False
+        else:
+            genome[index] = code, perf, True
 
     def effective_modifier(self, genome):
         """

@@ -80,6 +80,8 @@ ATP = 100
 PHASE_START = 101
 HUNGER = 102
 CELL_SZ = 103
+
+SPLIT_BIAS = 109
 # ======== CELL - COSTS ========
 GROWTH = 104
 DNA = 105
@@ -103,9 +105,8 @@ DEFAULT_START = {
     # cell size in mu_m
     CELL_SZ: 5,
     MAX_AGE: 72,
-    SENSE_DIST: 2 # changes based on performance in q-sense
-
-
+    SENSE_DIST: 2, # changes based on performance in q-sense
+    SPLIT_BIAS: 0.4
 }
 
 # ======== FOOD ========

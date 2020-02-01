@@ -1,7 +1,7 @@
 from simulation.config import *
 from simulation.gene import GeneManager
 from simulation.unit_manager import UnitManager
-from random import choice, randrange
+from random import choice, randrange, random
 from math import floor
 
 # number of genes directly corresponds to the number
@@ -27,11 +27,13 @@ class Cell:
         self.genome = None
         self.__generate_genome()
 
-        self.atp = DEFAULT_START[ATP]
-        self.phase = DEFAULT_START[PHASE_START]
+        self.options = options
 
-        self.size = DEFAULT_START[CELL_SZ]
-        self.hunger = DEFAULT_START[HUNGER]
+        self.atp = self.options[ATP]
+        self.phase = self.options[PHASE_START]
+
+        self.size = self.options[CELL_SZ]
+        self.hunger = self.options[HUNGER]
 
         self.is_splitting = False
         self.is_alive = True
@@ -56,9 +58,15 @@ class Cell:
         :return: str representing genetic code (expressions)
         """
         s = ""
-        for gene_unit in self.genome:
-            for gene in gene_unit:
-                s += str(gene) + "\n"
+        s += "HISTIDINE: " + self.genome[GENE_HIST][1]
+        s += "GLUCOSE: " + self.genome[GENE_HIST][1]
+        s += "PENTOSE: " + self.genome[GENE_HIST][1]
+        s += "FRUCTOSE: " + self.genome[GENE_HIST][1]
+        s += "AMYLOSE: " + self.genome[GENE_HIST][1]
+        s += "HISTIDINE: " + self.genome[GENE_HIST][1]
+
+
+
         return s
 
     def __generate_genome(self):
@@ -125,7 +133,7 @@ class Cell:
 
     def __find_food(self, dish):
         # find position of cell
-        x, y = self.pos()
+        x, y = self.pos
 
         # check if food available in pos
         food = dish[x][y].next()
@@ -134,8 +142,7 @@ class Cell:
 
     def __consume(self, food):
 
-        _type = food.next()
-        if _type is GLUCOSE:
+        if food is GLUCOSE:
             mod = self.unit_manager.effective_modifier(self.genome[GENE_GLUC])
             self.atp += BASE_FOOD_PROD[GLUCOSE] + BASE_FOOD_PROD[GLUCOSE] * mod
         elif food is FRUCTOSE:
@@ -184,10 +191,10 @@ class Cell:
                 self.hunger += COSTS[HUNGER_GROWTH]
         # phase 4 is to split, M-phase, inform colony!!!
         else:
-            modif = self.unit_manager.effective_modifier(self.genome[GENE_DNA])
-            attempt = randrange(modif)
+            modif = self.unit_manager.effective_modifier(self.genome[GENE_DNA]) + self.options[SPLIT_BIAS]
+            bar = random()
             # only split if capable
-            if attempt > BROKEN_GENE:
+            if modif > bar:
                 self.is_splitting = True
 
             self.phase = Phase.G1
@@ -208,6 +215,9 @@ class Cell:
         self.age += 1
         if self.age > DEFAULT_START[MAX_AGE]:
             self.die()
+
+    def get_pos(self):
+        return self.pos
 
 
 if __name__ == '__main__':
