@@ -226,4 +226,4 @@ class Colony:
 
 
 if __name__ == '__main__':
-    Dish().start_simul(15, 8, CARC_FERR)
+    Dish().start_simul(15, 4, CARC_AA)
