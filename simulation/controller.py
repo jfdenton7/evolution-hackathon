@@ -67,10 +67,10 @@ class Controller:
         }
 
     def __send_json(self):
-        if path.exists(f'data{self.mutigen}.json'):
-            os.remove(f'data{self.mutigen}.json')
+        if path.exists(f'../evolutiondata/data{self.mutigen}.json'):
+            os.remove(f'../evolutiondata/data{self.mutigen}.json')
 
-        with open(f'data{self.mutigen}.json', 'w+', encoding='utf-8') as f:
+        with open(f'../evolutiondata/data{self.mutigen}.json', 'w+', encoding='utf-8') as f:
             print(f)
             json.dump(self.json, f, ensure_ascii=False, indent=4)
 
